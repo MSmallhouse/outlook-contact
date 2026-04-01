@@ -34,7 +34,8 @@ Return only the raw JSON object, no markdown, no explanation.`,
     });
 
     const raw = message.content[0].type === "text" ? message.content[0].text.trim() : "";
-    const contact = JSON.parse(raw);
+    const cleaned = raw.replace(/^```(?:json)?\s*/i, "").replace(/\s*```$/, "").trim();
+    const contact = JSON.parse(cleaned);
     return res.status(200).json(contact);
   } catch (err) {
     return res.status(500).json({ error: err.message ?? "Unknown error" });
