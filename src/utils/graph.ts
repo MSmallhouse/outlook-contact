@@ -90,30 +90,40 @@ export async function signOut(): Promise<void> {
  * Creates a contact in the signed-in user's Outlook Contacts via Microsoft Graph.
  * Throws an error (with message) if the API call fails.
  */
+// Removes keys with null, undefined, or empty string values so the Graph API
+// doesn't reject the request due to unexpected null fields.
+function omitEmpty(obj: Record<string, unknown>): Record<string, unknown> {
+  return Object.fromEntries(
+    Object.entries(obj).filter(([, v]) => v !== null && v !== undefined && v !== "")
+  );
+}
+
 export async function createContact(contact: ParsedContact): Promise<void> {
   const token = await getAccessToken();
 
-  const body = {
+  const hasAddress = contact.street || contact.city;
+
+  const body = omitEmpty({
     givenName: contact.firstName,
     surname: contact.lastName,
     emailAddresses: contact.email
       ? [{ address: contact.email, name: `${contact.firstName} ${contact.lastName}`.trim() }]
-      : [],
-    businessPhones: contact.businessPhone ? [contact.businessPhone] : [],
-    mobilePhone: contact.mobilePhone || null,
-    companyName: contact.company || null,
-    jobTitle: contact.jobTitle || null,
-    businessHomePage: contact.website || null,
-    businessAddress: (contact.street || contact.city)
-      ? {
-          street: contact.street || null,
-          city: contact.city || null,
-          state: contact.state || null,
-          postalCode: contact.zip || null,
-          countryOrRegion: contact.country || null,
-        }
-      : null,
-  };
+      : undefined,
+    businessPhones: contact.businessPhone ? [contact.businessPhone] : undefined,
+    mobilePhone: contact.mobilePhone || undefined,
+    companyName: contact.company || undefined,
+    jobTitle: contact.jobTitle || undefined,
+    businessHomePage: contact.website || undefined,
+    businessAddress: hasAddress
+      ? omitEmpty({
+          street: contact.street,
+          city: contact.city,
+          state: contact.state,
+          postalCode: contact.zip,
+          countryOrRegion: contact.country,
+        })
+      : undefined,
+  });
 
   const response = await fetch("https://graph.microsoft.com/v1.0/me/contacts", {
     method: "POST",
