@@ -9,7 +9,7 @@ module.exports = {
   },
   output: {
     path: path.resolve(__dirname, "docs"),
-    filename: "[name].js",
+    filename: "[name].[contenthash].js",
     clean: true,
   },
   resolve: {
@@ -35,7 +35,7 @@ module.exports = {
       chunks: ["taskpane"],
     }),
     new MiniCssExtractPlugin({
-      filename: "[name].css",
+      filename: "[name].[contenthash].css",
     }),
     new CopyWebpackPlugin({
       patterns: [
