@@ -8,7 +8,7 @@ module.exports = {
     taskpane: "./src/taskpane/taskpane.ts",
   },
   output: {
-    path: path.resolve(__dirname, "docs"),
+    path: path.resolve(__dirname, "public"),
     filename: "[name].[contenthash].js",
     clean: true,
   },
