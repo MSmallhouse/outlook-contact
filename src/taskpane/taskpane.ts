@@ -124,6 +124,9 @@ async function loadContact(): Promise<void> {
       ? parseFromSelection(clipboardText, senderName)
       : parseContact(await readEmailBody(), senderName);
 
+    // DEBUG: show first 5 chars of source text in firstName to verify input
+    contact.firstName = (clipboardText ?? "body").slice(0, 5);
+
     // Use the address from the email header as a fallback if body parsing missed it
     if (!contact.email && senderEmail) {
       contact.email = senderEmail;
