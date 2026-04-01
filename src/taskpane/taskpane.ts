@@ -133,7 +133,8 @@ async function loadContact(): Promise<void> {
     });
 
     if (!response.ok) {
-      throw new Error("Failed to parse contact info");
+      const err = await response.json().catch(() => ({}));
+      throw new Error((err as { error?: string }).error ?? `Server error ${response.status}`);
     }
 
     const contact: ParsedContact = await response.json();
