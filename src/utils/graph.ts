@@ -9,7 +9,7 @@ import type { ParsedContact } from "./parser";
 // CONFIGURATION — fill these in after Azure App Registration
 // -----------------------------------------------------------------------
 const CLIENT_ID = "de056afa-b318-4d3b-bc1a-35e89d947f79";
-const REDIRECT_URI = "https://msmallhouse.github.io/outlook-contact/taskpane.html";
+const REDIRECT_URI = "https://outlook-contact.vercel.app/taskpane.html";
 // Use "common" to support both personal Microsoft accounts and work/school accounts
 const AUTHORITY = "https://login.microsoftonline.com/common";
 // -----------------------------------------------------------------------

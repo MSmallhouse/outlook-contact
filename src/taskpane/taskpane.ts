@@ -1,5 +1,5 @@
 import "../taskpane/taskpane.css";
-import { parseContact, parseFromSelection, type ParsedContact } from "../utils/parser";
+import type { ParsedContact } from "../utils/parser";
 import { createContact, getSignedInAccount, getAccessToken, signOut } from "../utils/graph";
 
 // -----------------------------------------------------------------------
@@ -125,7 +125,18 @@ async function loadContact(): Promise<void> {
 
   try {
     const clipboardText = await getClipboardText();
-    const contact = parseFromSelection(clipboardText ?? "");
+
+    const response = await fetch("/api/parse-contact", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ text: clipboardText ?? "" }),
+    });
+
+    if (!response.ok) {
+      throw new Error("Failed to parse contact info");
+    }
+
+    const contact: ParsedContact = await response.json();
 
     populateForm(contact);
     showView("view-form");
