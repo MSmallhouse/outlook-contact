@@ -80,22 +80,13 @@ function readForm(): ParsedContact {
 // Email reading
 // -----------------------------------------------------------------------
 
-function getSelectedText(): Promise<string | null> {
-  return new Promise((resolve) => {
-    Office.context.mailbox.item!.getSelectedDataAsync(
-      Office.CoercionType.Text,
-      (result) => {
-        if (
-          result.status === Office.AsyncResultStatus.Succeeded &&
-          result.value?.data?.trim()
-        ) {
-          resolve(result.value.data.trim());
-        } else {
-          resolve(null);
-        }
-      }
-    );
-  });
+async function getClipboardText(): Promise<string | null> {
+  try {
+    const text = await navigator.clipboard.readText();
+    return text?.trim() || null;
+  } catch {
+    return null;
+  }
 }
 
 function readEmailBody(): Promise<string> {
@@ -127,10 +118,10 @@ async function loadContact(): Promise<void> {
     const senderName = item.from?.displayName ?? "";
     const senderEmail = item.from?.emailAddress ?? "";
 
-    // Try selected text first; fall back to full body
-    const selectedText = await getSelectedText();
-    const contact = selectedText
-      ? parseFromSelection(selectedText, senderName)
+    // Try clipboard first; fall back to full body
+    const clipboardText = await getClipboardText();
+    const contact = clipboardText
+      ? parseFromSelection(clipboardText, senderName)
       : parseContact(await readEmailBody(), senderName);
 
     // Use the address from the email header as a fallback if body parsing missed it
