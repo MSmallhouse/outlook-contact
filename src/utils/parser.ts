@@ -218,6 +218,35 @@ function splitName(displayName: string): { firstName: string; lastName: string }
 }
 
 /**
+ * Parse contact info from a user-selected text snippet.
+ * Skips HTML stripping and signature isolation — the selection IS the relevant text.
+ */
+export function parseFromSelection(selectedText: string, senderDisplayName: string): ParsedContact {
+  const { firstName, lastName } = splitName(senderDisplayName);
+  const email = extractEmail(selectedText);
+  const { business: businessPhone, mobile: mobilePhone } = extractPhone(selectedText);
+  const website = extractWebsite(selectedText);
+  const { jobTitle, company } = extractTitleAndCompany(selectedText, senderDisplayName);
+  const { street, city, state, zip, country } = extractAddress(selectedText);
+
+  return {
+    firstName,
+    lastName,
+    email,
+    businessPhone,
+    mobilePhone,
+    company,
+    jobTitle,
+    street,
+    city,
+    state,
+    zip,
+    country,
+    website,
+  };
+}
+
+/**
  * Main entry point. Pass the raw email body (HTML or plain text) and
  * the sender's display name from Office.context.mailbox.item.from.displayName
  */

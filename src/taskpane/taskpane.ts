@@ -1,5 +1,5 @@
 import "../taskpane/taskpane.css";
-import { parseContact, type ParsedContact } from "../utils/parser";
+import { parseContact, parseFromSelection, type ParsedContact } from "../utils/parser";
 import { createContact, getSignedInAccount, getAccessToken, signOut } from "../utils/graph";
 
 // -----------------------------------------------------------------------
@@ -80,6 +80,24 @@ function readForm(): ParsedContact {
 // Email reading
 // -----------------------------------------------------------------------
 
+function getSelectedText(): Promise<string | null> {
+  return new Promise((resolve) => {
+    Office.context.mailbox.item!.getSelectedDataAsync(
+      Office.CoercionType.Text,
+      (result) => {
+        if (
+          result.status === Office.AsyncResultStatus.Succeeded &&
+          result.value?.data?.trim()
+        ) {
+          resolve(result.value.data.trim());
+        } else {
+          resolve(null);
+        }
+      }
+    );
+  });
+}
+
 function readEmailBody(): Promise<string> {
   return new Promise((resolve, reject) => {
     Office.context.mailbox.item!.body.getAsync(
@@ -108,8 +126,12 @@ async function loadContact(): Promise<void> {
     const item = Office.context.mailbox.item!;
     const senderName = item.from?.displayName ?? "";
     const senderEmail = item.from?.emailAddress ?? "";
-    const body = await readEmailBody();
-    const contact = parseContact(body, senderName);
+
+    // Try selected text first; fall back to full body
+    const selectedText = await getSelectedText();
+    const contact = selectedText
+      ? parseFromSelection(selectedText, senderName)
+      : parseContact(await readEmailBody(), senderName);
 
     // Use the address from the email header as a fallback if body parsing missed it
     if (!contact.email && senderEmail) {
@@ -157,9 +179,9 @@ async function handleSubmit(e: Event): Promise<void> {
 
     await createContact(contact);
     setStatus("Contact saved successfully.", "success");
+    document.getElementById("btn-save")!.hidden = true;
   } catch (err) {
     setStatus(`Failed to save: ${(err as Error).message}`, "error");
-  } finally {
     setSaveEnabled(true);
   }
 }
