@@ -7,18 +7,18 @@
   xsi:type="MailApp">
 
   <!-- Replace YOUR_ADDIN_GUID with a unique GUID: generate one at https://www.uuidgenerator.net/ -->
-  <Id>YOUR_ADDIN_GUID</Id>
+  <Id>b30dcc1e-01d2-4aaa-b14f-a12d8b81ff41</Id>
   <Version>1.0.0.0</Version>
   <ProviderName>Your Name</ProviderName>
   <DefaultLocale>en-US</DefaultLocale>
   <DisplayName DefaultValue="Contact Extractor"/>
   <Description DefaultValue="Extract contact info from an email and save to Outlook Contacts."/>
 
-  <!-- Replace YOUR_GITHUB_PAGES_URL with your actual GitHub Pages base URL -->
+  <!-- Replace https://msmallhouse.github.io/outlook-contact with your actual GitHub Pages base URL -->
   <!-- Example: https://username.github.io/outlook-contact -->
-  <IconUrl DefaultValue="YOUR_GITHUB_PAGES_URL/assets/icon-80.png"/>
-  <HighResolutionIconUrl DefaultValue="YOUR_GITHUB_PAGES_URL/assets/icon-80.png"/>
-  <SupportUrl DefaultValue="YOUR_GITHUB_PAGES_URL"/>
+  <IconUrl DefaultValue="https://msmallhouse.github.io/outlook-contact/assets/icon-80.png"/>
+  <HighResolutionIconUrl DefaultValue="https://msmallhouse.github.io/outlook-contact/assets/icon-80.png"/>
+  <SupportUrl DefaultValue="https://msmallhouse.github.io/outlook-contact"/>
 
   <Hosts>
     <Host Name="Mailbox"/>
@@ -33,7 +33,7 @@
   <FormSettings>
     <Form xsi:type="ItemRead">
       <DesktopSettings>
-        <SourceLocation DefaultValue="YOUR_GITHUB_PAGES_URL/taskpane.html"/>
+        <SourceLocation DefaultValue="https://msmallhouse.github.io/outlook-contact/taskpane.html"/>
         <RequestedHeight>450</RequestedHeight>
       </DesktopSettings>
     </Form>
@@ -85,13 +85,13 @@
 
     <Resources>
       <bt:Images>
-        <bt:Image id="Icon.16x16" DefaultValue="YOUR_GITHUB_PAGES_URL/assets/icon-16.png"/>
-        <bt:Image id="Icon.32x32" DefaultValue="YOUR_GITHUB_PAGES_URL/assets/icon-32.png"/>
-        <bt:Image id="Icon.80x80" DefaultValue="YOUR_GITHUB_PAGES_URL/assets/icon-80.png"/>
+        <bt:Image id="Icon.16x16" DefaultValue="https://msmallhouse.github.io/outlook-contact/assets/icon-16.png"/>
+        <bt:Image id="Icon.32x32" DefaultValue="https://msmallhouse.github.io/outlook-contact/assets/icon-32.png"/>
+        <bt:Image id="Icon.80x80" DefaultValue="https://msmallhouse.github.io/outlook-contact/assets/icon-80.png"/>
       </bt:Images>
       <bt:Urls>
-        <bt:Url id="Commands.Url" DefaultValue="YOUR_GITHUB_PAGES_URL/taskpane.html"/>
-        <bt:Url id="Taskpane.Url" DefaultValue="YOUR_GITHUB_PAGES_URL/taskpane.html"/>
+        <bt:Url id="Commands.Url" DefaultValue="https://msmallhouse.github.io/outlook-contact/taskpane.html"/>
+        <bt:Url id="Taskpane.Url" DefaultValue="https://msmallhouse.github.io/outlook-contact/taskpane.html"/>
       </bt:Urls>
       <bt:ShortStrings>
         <bt:String id="GroupLabel" DefaultValue="Contact Extractor"/>
