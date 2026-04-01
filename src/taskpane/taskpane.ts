@@ -128,11 +128,9 @@ async function loadContact(): Promise<void> {
     const senderName = item.from?.displayName ?? "";
     const senderEmail = item.from?.emailAddress ?? "";
 
-    // Try clipboard first; fall back to full body
+    // Clipboard only (body fallback temporarily disabled)
     const clipboardText = await getClipboardText();
-    const contact = clipboardText
-      ? parseFromSelection(clipboardText, senderName)
-      : parseContact(await readEmailBody(), senderName);
+    const contact = parseFromSelection(clipboardText ?? "", senderName);
 
 
     // Use the address from the email header as a fallback if body parsing missed it
