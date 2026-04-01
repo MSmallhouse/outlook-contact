@@ -103,12 +103,25 @@
       </div>
     </section>
 
-    <!-- Status message (error / success) -->
+    <!-- Error message -->
     <p id="status-msg" hidden></p>
 
     <div class="actions">
       <button type="submit" id="btn-save" class="primary">Save Contact</button>
     </div>
   </form>
+
+  <!-- Success view -->
+  <div id="view-success" hidden>
+    <div class="success-icon">✓</div>
+    <h1 class="success-title">Contact Saved</h1>
+    <div class="success-card">
+      <p id="success-name" class="success-name"></p>
+      <p id="success-company" class="success-detail"></p>
+      <p id="success-email" class="success-detail"></p>
+      <p id="success-phone" class="success-detail"></p>
+    </div>
+    <button id="btn-save-another" class="primary">Save Another</button>
+  </div>
 </body>
 </html>

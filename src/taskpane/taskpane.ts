@@ -6,10 +6,10 @@ import { createContact, getSignedInAccount, getAccessToken, signOut } from "../u
 // View helpers
 // -----------------------------------------------------------------------
 
-type ViewId = "view-signin" | "view-loading" | "view-form";
+type ViewId = "view-signin" | "view-loading" | "view-form" | "view-success";
 
 function showView(id: ViewId): void {
-  const views: ViewId[] = ["view-signin", "view-loading", "view-form"];
+  const views: ViewId[] = ["view-signin", "view-loading", "view-form", "view-success"];
   for (const v of views) {
     document.getElementById(v)!.hidden = v !== id;
   }
@@ -141,6 +141,16 @@ async function handleSignOut(): Promise<void> {
   setStatus("", "");
 }
 
+function showSuccess(contact: ParsedContact): void {
+  const fullName = `${contact.firstName} ${contact.lastName}`.trim();
+  document.getElementById("success-name")!.textContent = fullName;
+  document.getElementById("success-company")!.textContent = contact.company;
+  document.getElementById("success-email")!.textContent = contact.email;
+  document.getElementById("success-phone")!.textContent =
+    contact.businessPhone || contact.mobilePhone;
+  showView("view-success");
+}
+
 async function handleSubmit(e: Event): Promise<void> {
   e.preventDefault();
   setStatus("", "");
@@ -156,10 +166,9 @@ async function handleSubmit(e: Event): Promise<void> {
     }
 
     await createContact(contact);
-    setStatus("Contact saved successfully.", "success");
+    showSuccess(contact);
   } catch (err) {
     setStatus(`Failed to save: ${(err as Error).message}`, "error");
-  } finally {
     setSaveEnabled(true);
   }
 }
@@ -173,6 +182,7 @@ Office.onReady(async () => {
   document.getElementById("btn-signin")!.addEventListener("click", handleSignIn);
   document.getElementById("btn-signout")!.addEventListener("click", handleSignOut);
   document.getElementById("view-form")!.addEventListener("submit", handleSubmit);
+  document.getElementById("btn-save-another")!.addEventListener("click", loadContact);
 
   await updateAuthBar();
 
