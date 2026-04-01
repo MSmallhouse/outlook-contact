@@ -107,8 +107,14 @@ async function loadContact(): Promise<void> {
   try {
     const item = Office.context.mailbox.item!;
     const senderName = item.from?.displayName ?? "";
+    const senderEmail = item.from?.emailAddress ?? "";
     const body = await readEmailBody();
     const contact = parseContact(body, senderName);
+
+    // Use the address from the email header as a fallback if body parsing missed it
+    if (!contact.email && senderEmail) {
+      contact.email = senderEmail;
+    }
 
     populateForm(contact);
     showView("view-form");
