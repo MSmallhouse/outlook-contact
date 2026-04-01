@@ -22,6 +22,17 @@ const IGNORED_URL_DOMAINS = [
 ];
 
 /**
+ * Strips quoted reply content from HTML before any other processing.
+ * Removes <blockquote> blocks (Outlook's standard quoting mechanism)
+ * and any div with class "gmail_quote" or similar.
+ */
+function stripQuotedHtml(html: string): string {
+  return html
+    .replace(/<blockquote[\s\S]*?<\/blockquote>/gi, "")
+    .replace(/<div[^>]*class="[^"]*quote[^"]*"[\s\S]*?<\/div>/gi, "");
+}
+
+/**
  * Strips HTML tags and decodes common HTML entities from an email body.
  */
 function htmlToText(html: string): string {
@@ -45,7 +56,13 @@ function htmlToText(html: string): string {
  * like "-- ", "___", or "---", or the last 15 lines as a fallback.
  */
 function extractSignatureBlock(text: string): string {
-  const lines = text.split("\n");
+  // Strip plain-text quoted replies before looking for the signature.
+  // Cuts everything from "On [date] ... wrote:" or "-----Original Message-----" onward.
+  const quoteHeaderPattern = /^(>.*|On .+wrote:|[-]{5}Original Message[-]{5}.*)$/im;
+  const quoteMatch = text.search(quoteHeaderPattern);
+  const cleanText = quoteMatch > 0 ? text.slice(0, quoteMatch) : text;
+
+  const lines = cleanText.split("\n");
 
   // Look for a signature separator
   const separatorPattern = /^(\s*[-_]{2,}\s*|--\s*)$/;
@@ -205,7 +222,7 @@ function splitName(displayName: string): { firstName: string; lastName: string }
  * the sender's display name from Office.context.mailbox.item.from.displayName
  */
 export function parseContact(rawBody: string, senderDisplayName: string): ParsedContact {
-  const text = htmlToText(rawBody);
+  const text = htmlToText(stripQuotedHtml(rawBody));
   const signature = extractSignatureBlock(text);
 
   const { firstName, lastName } = splitName(senderDisplayName);

@@ -1,4 +1,3 @@
-import "../../node_modules/@microsoft/office-js/dist/office.js";
 import "../taskpane/taskpane.css";
 import { parseContact, type ParsedContact } from "../utils/parser";
 import { createContact, getSignedInAccount, getAccessToken, signOut } from "../utils/graph";
