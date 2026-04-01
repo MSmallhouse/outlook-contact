@@ -136,23 +136,26 @@ button {
   line-height: 1.4;
 }
 
-/* Status message */
+/* Error message (top of pane) */
+#error-msg {
+  padding: 8px 10px;
+  margin-bottom: 10px;
+  border-radius: 2px;
+  font-size: 12px;
+  line-height: 1.4;
+  background: #fde7e9;
+  color: #a4262c;
+}
+
+/* Success message (bottom of form) */
 #status-msg {
   margin-top: 10px;
   padding: 8px 10px;
   border-radius: 2px;
   font-size: 12px;
   line-height: 1.4;
-}
-
-#status-msg.success {
   background: #dff6dd;
   color: #107c10;
-}
-
-#status-msg.error {
-  background: #fde7e9;
-  color: #a4262c;
 }
 
 /* Loading spinner */

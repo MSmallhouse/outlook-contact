@@ -16,10 +16,19 @@ function showView(id: ViewId): void {
 }
 
 function setStatus(message: string, type: "success" | "error" | ""): void {
-  const el = document.getElementById("status-msg")!;
-  el.textContent = message;
-  el.className = type;
-  el.hidden = !message;
+  const bottom = document.getElementById("status-msg")!;
+  const top = document.getElementById("error-msg")!;
+
+  if (type === "error") {
+    top.textContent = message;
+    top.hidden = !message;
+    bottom.hidden = true;
+  } else {
+    bottom.textContent = message;
+    bottom.className = type;
+    bottom.hidden = !message;
+    top.hidden = true;
+  }
 }
 
 function setSaveEnabled(enabled: boolean): void {
