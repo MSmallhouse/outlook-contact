@@ -124,19 +124,8 @@ async function loadContact(): Promise<void> {
   setStatus("", "");
 
   try {
-    const item = Office.context.mailbox.item!;
-    const senderName = item.from?.displayName ?? "";
-    const senderEmail = item.from?.emailAddress ?? "";
-
-    // Clipboard only (body fallback temporarily disabled)
     const clipboardText = await getClipboardText();
-    const contact = parseFromSelection(clipboardText ?? "", senderName);
-
-
-    // Use the address from the email header as a fallback if body parsing missed it
-    if (!contact.email && senderEmail) {
-      contact.email = senderEmail;
-    }
+    const contact = parseFromSelection(clipboardText ?? "");
 
     populateForm(contact);
     showView("view-form");

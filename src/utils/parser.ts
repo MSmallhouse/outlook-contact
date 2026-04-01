@@ -201,6 +201,22 @@ function extractAddress(
 }
 
 /**
+ * Extracts the most likely name from the top of the selected text.
+ * Names typically appear first in a signature block before phone/email/URL lines.
+ */
+function extractName(text: string): string {
+  const lines = text.split("\n").map((l) => l.trim()).filter((l) => l.length > 0);
+  const isDataLine = (l: string) => /[@+\d(]/.test(l) || /https?:\/\//.test(l);
+
+  for (const line of lines) {
+    if (!isDataLine(line) && line.length < 60) {
+      return line;
+    }
+  }
+  return "";
+}
+
+/**
  * Splits a full display name into first and last name.
  * Handles "Last, First" and "First Last" formats.
  */
@@ -221,12 +237,13 @@ function splitName(displayName: string): { firstName: string; lastName: string }
  * Parse contact info from a user-selected text snippet.
  * Skips HTML stripping and signature isolation — the selection IS the relevant text.
  */
-export function parseFromSelection(selectedText: string, senderDisplayName: string): ParsedContact {
-  const { firstName, lastName } = splitName(senderDisplayName);
+export function parseFromSelection(selectedText: string): ParsedContact {
+  const nameFromText = extractName(selectedText);
+  const { firstName, lastName } = splitName(nameFromText);
   const email = extractEmail(selectedText);
   const { business: businessPhone, mobile: mobilePhone } = extractPhone(selectedText);
   const website = extractWebsite(selectedText);
-  const { jobTitle, company } = extractTitleAndCompany(selectedText, senderDisplayName);
+  const { jobTitle, company } = extractTitleAndCompany(selectedText, nameFromText);
   const { street, city, state, zip, country } = extractAddress(selectedText);
 
   return {
