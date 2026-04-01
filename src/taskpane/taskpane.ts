@@ -82,7 +82,8 @@ function readForm(): ParsedContact {
 
 async function getClipboardText(): Promise<string | null> {
   try {
-    const text = await navigator.clipboard.readText();
+    const timeout = new Promise<null>((resolve) => setTimeout(() => resolve(null), 1500));
+    const text = await Promise.race([navigator.clipboard.readText(), timeout]);
     return text?.trim() || null;
   } catch {
     return null;
