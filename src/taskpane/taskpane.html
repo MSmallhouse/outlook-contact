@@ -8,14 +8,14 @@
   <meta http-equiv="Pragma" content="no-cache" />
   <meta http-equiv="Expires" content="0" />
   <script>
-    // Force a fresh load every time by appending a timestamp to the URL.
-    // Outlook's webview ignores HTTP cache headers, so this ensures it
-    // never serves a stale cached version of the task pane.
+    // Outlook's webview caches aggressively and ignores HTTP cache headers.
+    // On first load, force a hard reload (bypasses all caches).
+    // sessionStorage tracks whether we've already reloaded this session
+    // so we don't loop infinitely.
     (function() {
-      var url = new URL(window.location.href);
-      if (!url.searchParams.get('t')) {
-        url.searchParams.set('t', Date.now());
-        window.location.replace(url.toString());
+      if (!sessionStorage.getItem('hard_reloaded')) {
+        sessionStorage.setItem('hard_reloaded', '1');
+        window.location.reload(true);
       }
     })();
   </script>
